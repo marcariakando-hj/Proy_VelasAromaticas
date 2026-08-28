@@ -1,0 +1,6 @@
+{
+  "name": "Ayllu — Velas con Aroma",
+  "description": "Velas artesanales de cera de soja Ayllu, mechas de madera crujiente, colectivo de jóvenes artistas colaboradores, esencias botánicas puras y personalización a medida.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
