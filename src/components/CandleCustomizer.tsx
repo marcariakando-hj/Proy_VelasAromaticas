@@ -7,24 +7,10 @@ import {
   ShoppingBag,
   Check,
   RotateCcw,
-  Palette,
-  Layers,
-  Leaf,
-  Tag,
-  Info,
-  Sliders,
-  Heart,
-  ChevronRight,
-  ShieldCheck,
-  Clock,
-  Feather
+  Palette
 } from "lucide-react";
 import { CandleProduct } from "../types";
 import { woodSoundEngine } from "../utils/audioSynth";
-
-interface CandleCustomizerProps {
-  onAddCustomCandleToCart: (customCandle: CandleProduct) => void;
-}
 
 export interface VesselOption {
   id: string;
@@ -395,30 +381,31 @@ export const LABEL_STYLES: LabelStyleOption[] = [
   },
 ];
 
+interface CandleCustomizerProps {
+  onAddCustomCandleToCart: (customCandle: CandleProduct) => void;
+}
+
 export const CandleCustomizer: React.FC<CandleCustomizerProps> = ({
   onAddCustomCandleToCart,
 }) => {
-  // Wizard & Form States
   const [selectedVessel, setSelectedVessel] = useState<VesselOption>(VESSELS[0]);
   const [selectedWaxColor, setSelectedWaxColor] = useState<WaxColorOption>(WAX_COLORS[0]);
   const [selectedWick, setSelectedWick] = useState<WickOption>(WICKS[0]);
   const [selectedBotanicals, setSelectedBotanicals] = useState<BotanicalOption[]>([
-    BOTANICALS[0], // Lavanda
-    BOTANICALS[1], // Naranja
-    BOTANICALS[2], // Canela
+    BOTANICALS[0],
+    BOTANICALS[1],
+    BOTANICALS[2],
   ]);
   const [labelTitle, setLabelTitle] = useState("Vela de Calma & Hogar");
   const [labelSubtitle, setLabelSubtitle] = useState("Vertida a mano con cera de soja virgen");
   const [labelStyle, setLabelStyle] = useState<LabelStyleOption>(LABEL_STYLES[0]);
   const [includeGiftWrap, setIncludeGiftWrap] = useState(false);
 
-  // Interactive Live Simulation States
   const [isLit, setIsLit] = useState(false);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [viewMode, setViewMode] = useState<"top" | "front">("top");
   const [activeStep, setActiveStep] = useState<number>(1);
 
-  // Audio syncer with candle burning state
   useEffect(() => {
     if (isLit && selectedWick.id === "madera") {
       woodSoundEngine.start();
@@ -449,7 +436,6 @@ export const CandleCustomizer: React.FC<CandleCustomizerProps> = ({
     }
   };
 
-  // Botanical toggle handler (Min 2, Max 5)
   const toggleBotanical = (bot: BotanicalOption) => {
     const exists = selectedBotanicals.some((b) => b.id === bot.id);
     if (exists) {
@@ -463,20 +449,17 @@ export const CandleCustomizer: React.FC<CandleCustomizerProps> = ({
     }
   };
 
-  // Dynamic Olfactory Pyramid Generation
   const salidaNotes = selectedBotanicals.filter((b) => b.category === "Salida");
   const corazonNotes = selectedBotanicals.filter((b) => b.category === "Corazón");
   const fondoNotes = selectedBotanicals.filter((b) => b.category === "Fondo");
 
-  // Dynamic Price Calculation
   const basePrice = selectedVessel.basePrice;
   const wickPrice = selectedWick.priceAddon;
   const botanicalsAddon = selectedBotanicals.reduce((sum, b) => sum + b.priceAddon, 0);
-  const labelPrice = 2.0; // standard custom label
+  const labelPrice = 2.0;
   const giftWrapPrice = includeGiftWrap ? 3.0 : 0.0;
   const totalPrice = Number((basePrice + wickPrice + botanicalsAddon + labelPrice + giftWrapPrice).toFixed(2));
 
-  // Reset to default balanced recipe
   const handleResetRecipe = () => {
     setSelectedVessel(VESSELS[0]);
     setSelectedWaxColor(WAX_COLORS[0]);
@@ -489,7 +472,6 @@ export const CandleCustomizer: React.FC<CandleCustomizerProps> = ({
     setIsLit(false);
   };
 
-  // Submit Bespoke Candle to Shopping Cart
   const handleAddToCart = () => {
     const bespokeCandle: CandleProduct = {
       id: `bespoke-candle-${Date.now()}`,
@@ -538,7 +520,6 @@ export const CandleCustomizer: React.FC<CandleCustomizerProps> = ({
       className="py-16 bg-[#FAF7F2] border-b border-[#E5E0DA] relative overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-        {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto space-y-2">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white border border-[#E5E0DA] text-[#8C7A6B] text-[10px] uppercase font-bold tracking-widest shadow-2xs">
             <Sparkles className="w-3.5 h-3.5 text-[#D98B68]" />
@@ -552,7 +533,6 @@ export const CandleCustomizer: React.FC<CandleCustomizerProps> = ({
           </p>
         </div>
 
-        {/* Quick Stepper Bar */}
         <div className="flex items-center justify-center gap-2 sm:gap-3 overflow-x-auto py-2">
           {[
             { step: 1, title: "1. Vasija" },
@@ -575,11 +555,8 @@ export const CandleCustomizer: React.FC<CandleCustomizerProps> = ({
           ))}
         </div>
 
-        {/* TWO-PANEL INTERACTIVE WORKSPACE */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* LEFT PANEL: Step-by-Step Customizer Controls (Col 7) */}
           <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-8 border border-[#E5E0DA] shadow-xs space-y-8">
-            {/* STEP 1: SELECCIÓN DE VASIJA Y BASE */}
             <div className={`space-y-4 ${activeStep !== 1 && "hidden sm:block"}`}>
               <div className="flex items-center justify-between border-b border-[#E5E0DA] pb-3">
                 <div className="flex items-center gap-2">
@@ -643,7 +620,6 @@ export const CandleCustomizer: React.FC<CandleCustomizerProps> = ({
               </div>
             </div>
 
-            {/* STEP 2: SELECTOR DE TONO DE CERA */}
             <div className={`space-y-4 ${activeStep !== 2 && "hidden sm:block"}`}>
               <div className="flex items-center justify-between border-b border-[#E5E0DA] pb-3">
                 <div className="flex items-center gap-2">
@@ -681,7 +657,6 @@ export const CandleCustomizer: React.FC<CandleCustomizerProps> = ({
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2.5">
-                          {/* Color Swatch Circle */}
                           <div
                             className="w-5 h-5 rounded-full border-2 shadow-xs shrink-0 flex items-center justify-center"
                             style={{
@@ -718,7 +693,6 @@ export const CandleCustomizer: React.FC<CandleCustomizerProps> = ({
               </div>
             </div>
 
-            {/* STEP 3: MECHA Y EXPERIENCIA SENSORIAL */}
             <div className={`space-y-4 ${activeStep !== 3 && "hidden sm:block"}`}>
               <div className="flex items-center justify-between border-b border-[#E5E0DA] pb-3">
                 <div className="flex items-center gap-2">
@@ -779,7 +753,6 @@ export const CandleCustomizer: React.FC<CandleCustomizerProps> = ({
               </div>
             </div>
 
-            {/* STEP 4: FORMULACIÓN OLFATIVA Y BOTÁNICOS */}
             <div className={`space-y-4 ${activeStep !== 4 && "hidden sm:block"}`}>
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#E5E0DA] pb-3">
                 <div className="flex items-center gap-2">
@@ -801,7 +774,6 @@ export const CandleCustomizer: React.FC<CandleCustomizerProps> = ({
                 Selecciona entre 2 y 5 botánicos deshidratados reales. Se superpondrán armónicamente sobre el tono de cera seleccionado en la vista previa.
               </p>
 
-              {/* Botanicals Interactive Grid */}
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
                 {BOTANICALS.map((bot) => {
                   const isSelected = selectedBotanicals.some((b) => b.id === bot.id);
@@ -855,7 +827,6 @@ export const CandleCustomizer: React.FC<CandleCustomizerProps> = ({
                 })}
               </div>
 
-              {/* Dynamic Olfactory Pyramid Preview Box */}
               <div className="p-4 bg-[#FAF7F2] rounded-2xl border border-[#E5E0DA] space-y-2.5">
                 <span className="text-[10px] font-bold uppercase tracking-widest text-[#8C7A6B] block">
                   Estructura de la Pirámide Olfativa Resultante
@@ -897,7 +868,6 @@ export const CandleCustomizer: React.FC<CandleCustomizerProps> = ({
               </div>
             </div>
 
-            {/* STEP 5: PERSONALIZACIÓN DE ETIQUETA Y MENSAJE */}
             <div className={`space-y-4 ${activeStep !== 5 && "hidden sm:block"}`}>
               <div className="flex items-center justify-between border-b border-[#E5E0DA] pb-3">
                 <div className="flex items-center gap-2">
@@ -947,7 +917,6 @@ export const CandleCustomizer: React.FC<CandleCustomizerProps> = ({
                 </div>
               </div>
 
-              {/* Label Texture Style Selector */}
               <div>
                 <label className="block text-xs font-bold text-[#423D33] mb-2">
                   Estilo de Etiqueta & Papel
@@ -969,7 +938,6 @@ export const CandleCustomizer: React.FC<CandleCustomizerProps> = ({
                 </div>
               </div>
 
-              {/* Gift Wrap option */}
               <div className="pt-2">
                 <label className="flex items-center gap-3 p-3 bg-[#FAF7F2] rounded-2xl border border-[#E5E0DA] cursor-pointer hover:bg-[#F2EDE7] transition-colors">
                   <input
@@ -990,7 +958,6 @@ export const CandleCustomizer: React.FC<CandleCustomizerProps> = ({
               </div>
             </div>
 
-            {/* Reset & Stepper Buttons */}
             <div className="pt-4 border-t border-[#E5E0DA] flex items-center justify-between">
               <button
                 onClick={handleResetRecipe}
@@ -1021,10 +988,8 @@ export const CandleCustomizer: React.FC<CandleCustomizerProps> = ({
             </div>
           </div>
 
-          {/* RIGHT PANEL: Dynamic Layered Preview & Simulation (Col 5) */}
           <div className="lg:col-span-5 sticky top-24 space-y-6">
             <div className="bg-white rounded-3xl p-6 border border-[#E5E0DA] shadow-lg relative overflow-hidden space-y-5">
-              {/* Preview Header & View Mode Switcher */}
               <div className="flex items-center justify-between border-b border-[#E5E0DA] pb-3">
                 <div>
                   <div className="flex items-center gap-1.5">
@@ -1066,12 +1031,9 @@ export const CandleCustomizer: React.FC<CandleCustomizerProps> = ({
                 </div>
               </div>
 
-              {/* DYNAMIC CANVAS / LAYERED STAGE */}
               <div className="relative aspect-square rounded-3xl bg-[#F5F0EB] border border-[#E5E0DA] overflow-hidden flex items-center justify-center p-4 shadow-inner">
-                {/* VIEW 1: TOP-DOWN WAX SURFACE WITH DYNAMIC BOTANICALS & WICK */}
                 {viewMode === "top" ? (
                   <div className="relative w-72 h-72 sm:w-80 sm:h-80 rounded-full shadow-2xl flex items-center justify-center transition-all duration-500">
-                    {/* Outer Ceramic Vessel Rim */}
                     <div
                       className="absolute inset-0 rounded-full border-8 shadow-inner transition-colors duration-500"
                       style={{
@@ -1080,23 +1042,18 @@ export const CandleCustomizer: React.FC<CandleCustomizerProps> = ({
                       }}
                     />
 
-                    {/* Inner Soy Wax Surface Layer (Updates in real time to selectedWaxColor.hex) */}
                     <div
                       className="relative w-60 h-60 sm:w-68 sm:h-68 rounded-full border border-black/5 flex items-center justify-center overflow-hidden transition-colors duration-500 shadow-inner"
                       style={{ backgroundColor: selectedWaxColor.hex }}
                     >
-                      {/* Subtle Wax Melt Texture & Shadow Ring */}
                       <div className="absolute inset-0 rounded-full bg-radial from-transparent to-black/10 pointer-events-none" />
 
-                      {/* Warm Ambient Glow when Lit */}
                       {isLit && (
                         <div className="absolute inset-0 rounded-full bg-radial from-[#FAD02C]/40 via-[#F39C12]/20 to-transparent animate-pulse pointer-events-none" />
                       )}
 
-                      {/* DYNAMIC BOTANICALS RENDERED ORGANICALLY AROUND THE WICK */}
                       <div className="absolute inset-0 pointer-events-none">
                         {selectedBotanicals.map((bot, idx) => {
-                          // Coordinates array for balanced botanical distribution
                           const positions = [
                             { top: "20%", left: "28%", rot: "-25deg", scale: 1 },
                             { top: "22%", right: "24%", rot: "45deg", scale: 1.1 },
@@ -1116,7 +1073,6 @@ export const CandleCustomizer: React.FC<CandleCustomizerProps> = ({
                               }}
                               className="transition-all duration-700 animate-fade-in filter drop-shadow-md"
                             >
-                              {/* RENDER DYNAMIC BOTANICAL SVG GRAPHIC */}
                               {bot.visualType === "lavanda" && (
                                 <svg width="44" height="44" viewBox="0 0 100 100" fill="none">
                                   <path d="M50 90 Q48 50 50 10" stroke="#4A6B35" strokeWidth="3" />
@@ -1246,7 +1202,6 @@ export const CandleCustomizer: React.FC<CandleCustomizerProps> = ({
                         })}
                       </div>
 
-                      {/* CENTER WICK (WOODEN OR COTTON) */}
                       <div className="relative z-20 flex flex-col items-center justify-center">
                         {selectedWick.id === "madera" ? (
                           <div
@@ -1266,7 +1221,6 @@ export const CandleCustomizer: React.FC<CandleCustomizerProps> = ({
                           </div>
                         )}
 
-                        {/* DYNAMIC FLAME COMPONENT WHEN LIT */}
                         {isLit && (
                           <div className="absolute -top-7 z-30 flex flex-col items-center pointer-events-none">
                             <div className="relative w-8 h-12">
@@ -1279,9 +1233,7 @@ export const CandleCustomizer: React.FC<CandleCustomizerProps> = ({
                     </div>
                   </div>
                 ) : (
-                  /* VIEW 2: FRONT CONTAINER VIEW WITH REAL-TIME LABEL RENDERING */
                   <div className="relative w-64 h-72 sm:w-72 sm:h-80 flex flex-col items-center justify-end transition-all duration-500">
-                    {/* Vessel Body */}
                     <div
                       className="relative w-56 h-60 rounded-t-xl rounded-b-3xl shadow-xl flex flex-col items-center justify-center p-4 transition-colors duration-500"
                       style={{
@@ -1290,7 +1242,6 @@ export const CandleCustomizer: React.FC<CandleCustomizerProps> = ({
                         borderWidth: "3px",
                       }}
                     >
-                      {/* Top Ceramic Lip / Rim */}
                       <div
                         className="absolute -top-3 left-0 right-0 h-6 rounded-t-full border-t-2 border-b-2 shadow-inner"
                         style={{
@@ -1299,7 +1250,6 @@ export const CandleCustomizer: React.FC<CandleCustomizerProps> = ({
                         }}
                       />
 
-                      {/* Top Wick & Flame peering over lip */}
                       <div className="absolute -top-8 z-20 flex flex-col items-center">
                         {isLit && (
                           <div className="w-7 h-10 bg-radial from-[#FFF3A8] via-[#FFAE19] to-[#E65100] rounded-full blur-[0.5px] animate-flicker" />
@@ -1311,7 +1261,6 @@ export const CandleCustomizer: React.FC<CandleCustomizerProps> = ({
                         />
                       </div>
 
-                      {/* REAL-TIME BESPOKE LABEL OVER VESSEL */}
                       <div
                         className={`w-44 p-3 rounded-xl border text-center shadow-md space-y-1.5 transition-all ${labelStyle.bgClass} ${labelStyle.borderClass}`}
                       >
@@ -1340,9 +1289,7 @@ export const CandleCustomizer: React.FC<CandleCustomizerProps> = ({
                 )}
               </div>
 
-              {/* SIMULATION ACTION BUTTONS */}
               <div className="grid grid-cols-2 gap-3 pt-1">
-                {/* Flame Toggle Button */}
                 <button
                   onClick={toggleFlame}
                   className={`py-2.5 px-4 rounded-2xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs ${
@@ -1355,7 +1302,6 @@ export const CandleCustomizer: React.FC<CandleCustomizerProps> = ({
                   <span>{isLit ? "Apagar Vela" : "Encender Vela"}</span>
                 </button>
 
-                {/* Wood Sound Crackle Toggle */}
                 {selectedWick.id === "madera" ? (
                   <button
                     onClick={toggleSound}
@@ -1379,7 +1325,6 @@ export const CandleCustomizer: React.FC<CandleCustomizerProps> = ({
                 )}
               </div>
 
-              {/* LIVE RECIPE SUMMARY & PRICING BAR */}
               <div className="p-4 bg-[#FAF7F2] rounded-2xl border border-[#E5E0DA] space-y-3">
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-bold text-[#423D33]">Total Configuración:</span>
@@ -1428,7 +1373,6 @@ export const CandleCustomizer: React.FC<CandleCustomizerProps> = ({
                   )}
                 </div>
 
-                {/* FINAL ACTION: ENCARGAR VELA PERSONALIZADA */}
                 <button
                   id="order-custom-candle-btn"
                   onClick={handleAddToCart}
